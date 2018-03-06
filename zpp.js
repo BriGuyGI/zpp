@@ -8,6 +8,20 @@ var PingPong = function (params) {
     this.initialize(params);
 };
 
+function setThingspeakBusy() {
+  setThingspeak(1);
+}
+
+function setThingspeakFree() {
+  setThingspeak(0);
+}
+
+function setThingspeak(n) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "https://api.thingspeak.com/update?api_key=1X5K66NJYYLPZAV8&field2=" + n, true);
+  xhttp.send();
+}
+
 /**
  * Initialization
  * @param {{}} params
@@ -34,6 +48,8 @@ PingPong.prototype.initialize = function (params) {
     this.cancelHoldDelay = 1500;
     this.cancelTimeoutCheck = null;
 
+    this.thingspeakDelay = 16000;
+
     this.clockStart = 0;
     this.clockInterval = null;
 
@@ -53,7 +69,7 @@ PingPong.prototype.initialize = function (params) {
 PingPong.prototype.initializeEvents = function () {
 
     $(document).on('contextmenu', function () {
-        return false;
+        //return false;
     });
 
     $(document).on('click', function (event) {
@@ -154,15 +170,15 @@ PingPong.prototype.onStart = function () {
     this.el.find('.ready').hide();
     this.el.find('#ready').hide();
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "https://api.thingspeak.com/update?api_key=1X5K66NJYYLPZAV8&field2=1", true);
-    xhttp.send();
+    if (this.thingspeakTimeout) {
+      clearTimeout(this.thingspeakTimeout);
+    }
+
+    setThingspeakBusy();
 
     this.initialService = Math.round(Math.random()) === 1 ? 'left' : 'right';
     this.changeService(this.initialService);
     this.el.find('#service').show();
-
-
 
     this.gameStarted = true;
 };
@@ -365,16 +381,12 @@ PingPong.prototype.gameOver = function () {
 
     this.playSound('sounds/winner.wav');
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "https://api.thingspeak.com/update?api_key=1X5K66NJYYLPZAV8&field2=0", true);
-    xhttp.send();
+    this.thingspeakTimeout = setTimeout(setThingspeakFree, this.thingspeakDelay);
 
     setTimeout(function () {
-
-        this.el.find('.winner').hide();
-        this.start();
-
-    }.bind(this), 16000);
+      this.el.find('.winner').hide();
+      this.start();
+    }.bind(this), 5000);
 };
 
 /**
@@ -453,13 +465,13 @@ $.fn.extend({
     }
 });
 
-
-$.ajax({
-  url: 'send-ajax-data.php',
-})
-.done(function(res) {
-  console.log(res);
-})
-.fail(function(err) {
-  console.log('Error: ' + err.status);
-});
+// WHAT IS THIS DOING?
+// $.ajax({
+//   url: 'send-ajax-data.php',
+// })
+// .done(function(res) {
+//   console.log(res);
+// })
+// .fail(function(err) {
+//   console.log('Error: ' + err.status);
+// });
