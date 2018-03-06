@@ -236,8 +236,14 @@ PingPong.prototype.onClick = function (event) {
  */
 PingPong.prototype.onLongClick = function (event) {
 
+  if ((this.playerLeftScore + this.playerRightScore) % 5 == 0) {
+    if (this.currentService == 'right') {
+      this.changeService('left')
+    } else {
+      this.changeService('right')
+    }
+  }
     switch (event.which) {
-
         case 1:
             this.removePoint('left');
             break;
