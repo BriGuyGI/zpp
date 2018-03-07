@@ -1,0 +1,22 @@
+{
+  "name": "zpp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "zpp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shannonarcher/zpp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shannonarcher/zpp/issues"
+  },
+  "homepage": "https://github.com/shannonarcher/zpp#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
