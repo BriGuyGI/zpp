@@ -72,6 +72,26 @@ PingPong.prototype.initializeEvents = function () {
         return false;
     });
 
+    let self = this;
+    let keysPressed = [];
+    $(document).on('keydown', function (e) {
+      keysPressed[e.key] = true;
+
+      if (keysPressed.ArrowLeft && !keysPressed.ArrowRight && self.gameStarted) {
+        self.addPoint('left');
+      }
+      else if (keysPressed.ArrowLeft && keysPressed.ArrowRight && !self.gameStarted) {
+        self.onStart();
+      }
+      else if (!keysPressed.ArrowLeft && keysPressed.ArrowRight && self.gameStarted) {
+        self.addPoint('right');
+      }
+    })
+
+    $(document).on('keyup', function (e) {
+      keysPressed[e.key] = false;
+    });
+
     $(document).on('click', function (event) {
 
         event.preventDefault();
@@ -279,6 +299,8 @@ PingPong.prototype.onLongClick = function (event) {
  */
 PingPong.prototype.addPoint = function (player) {
 
+  console.log(player);
+
     if (player === 'left') {
         this.playerLeftScore++;
     } else if (player === 'right') {
@@ -308,6 +330,7 @@ PingPong.prototype.removePoint = function (player) {
 };
 
 PingPong.prototype.updateScore = function () {
+  console.log(this.playerLeftScore, this.playerRightScore);
 
     var maxPoints = 20;
     var maxTotalPoints = 2 * maxPoints;
