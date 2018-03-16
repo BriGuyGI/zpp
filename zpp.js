@@ -69,7 +69,7 @@ PingPong.prototype.initialize = function (params) {
 PingPong.prototype.initializeEvents = function () {
 
     $(document).on('contextmenu', function () {
-        //return false;
+        return false;
     });
 
     $(document).on('click', function (event) {
